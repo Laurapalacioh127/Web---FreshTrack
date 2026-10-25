@@ -14,6 +14,7 @@ import { CreateInventoryItemDto } from './dto/create-inventory-item.dto';
 import { FilterInventoryQueryDto } from './dto/filter-inventory-query.dto';
 import { UpdateInventoryItemDto } from './dto/update-inventory-item.dto';
 import { InventoryService } from './inventory.service';
+import { ExpiringInventoryQueryDto } from './dto/expiring-inventory-query.dto';
 
 @Controller('inventory')
 export class InventoryController {
@@ -29,6 +30,10 @@ export class InventoryController {
     return this.inventoryService.findByUser(query);
   }
 
+   @Get('expiring')
+  findExpiring(@Query(requestValidationPipe) query: ExpiringInventoryQueryDto) {
+    return this.inventoryService.findExpiring(query);
+  }
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.inventoryService.findOne(id);

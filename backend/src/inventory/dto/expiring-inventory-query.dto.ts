@@ -1,0 +1,15 @@
+import { Type } from 'class-transformer';
+import { IsInt, Max, Min } from 'class-validator';
+
+export class ExpiringInventoryQueryDto {
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  userId!: number;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(30)
+  days: number = 3;
+}
