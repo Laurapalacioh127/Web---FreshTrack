@@ -1,7 +1,9 @@
+name: web-freshtrack
+
 services:
   postgres:
     image: postgres:17-alpine
-    container_name: freshtrack-db
+    container_name: web-freshtrack-db
     restart: unless-stopped
     ports:
       - '5432:5432'

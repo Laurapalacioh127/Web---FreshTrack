@@ -12,6 +12,9 @@ const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
+const inventory_module_1 = require("./inventory/inventory.module");
+const recipes_module_1 = require("./recipes/recipes.module");
+const donations_module_1 = require("./donations/donations.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -35,6 +38,9 @@ exports.AppModule = AppModule = __decorate([
                     synchronize: true,
                 }),
             }),
+            inventory_module_1.InventoryModule,
+            recipes_module_1.RecipesModule,
+            donations_module_1.DonationsModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
