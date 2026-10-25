@@ -5,8 +5,10 @@ import { InventoryEntity } from '../entities/inventory.entity';
 import { MasterCatalogEntity } from '../entities/master-catalog.entity';
 import { UserEntity } from '../entities/user.entity';
 import { CreateInventoryItemDto } from './dto/create-inventory-item.dto';
+import { ExpiringInventoryQueryDto } from './dto/expiring-inventory-query.dto';
 import { FilterInventoryQueryDto } from './dto/filter-inventory-query.dto';
 import { UpdateInventoryItemDto } from './dto/update-inventory-item.dto';
+import { InventoryRulesService } from './inventory-rules.service';
 
 @Injectable()
 export class InventoryService {
@@ -19,6 +21,8 @@ export class InventoryService {
 
     @InjectRepository(MasterCatalogEntity)
     private readonly catalogRepository: Repository<MasterCatalogEntity>,
+
+    private readonly inventoryRulesService: InventoryRulesService,
   ) {}
 
   async create(dto: CreateInventoryItemDto): Promise<InventoryEntity> {
@@ -54,6 +58,25 @@ export class InventoryService {
       relations: { masterProduct: true },
       order: { expirationDate: 'ASC' },
     });
+  }
+
+  async findExpiring(query: ExpiringInventoryQueryDto) {
+    const items = await this.findByUser({ userId: query.userId });
+
+    return items
+      .map((item) => ({
+        id: item.id,
+        product: item.masterProduct.productName,
+        quantity: item.quantity,
+        expirationDate: item.expirationDate,
+        daysUntilExpiration:
+          this.inventoryRulesService.getDaysUntilExpiration(item),
+        status: this.inventoryRulesService.getExpirationStatus(
+          item,
+          query.days,
+        ),
+      }))
+      .filter((item) => item.status !== 'fresh');
   }
 
   async findOne(id: number): Promise<InventoryEntity> {
