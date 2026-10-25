@@ -1,0 +1,419 @@
+{
+  "info": {
+    "_postman_id": "6fee220a-41e1-43da-a652-3fd88630847f",
+    "name": "FreshTrack",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56987578"
+  },
+  "item": [
+    {
+      "name": "Inventory",
+      "item": [
+        {
+          "name": "Casos de error",
+          "item": [
+            {
+              "name": "9 - Error: cantidad en cero",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"userId\": 2, \"masterProductId\": 1, \"quantity\": 0, \"expirationDate\": \"2026-11-10\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/inventory",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "inventory"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "10 - Error: cantidad como texto",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"userId\": 2, \"masterProductId\": 1, \"quantity\": \"2\", \"expirationDate\": \"2026-11-10\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/inventory",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "inventory"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "11 - Error: campo no permitido",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"userId\": 2, \"masterProductId\": 1, \"quantity\": 2, \"expirationDate\": \"2026-11-10\", \"status\": \"x\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/inventory",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "inventory"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "12 - Error: fecha inválida",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"userId\": 2, \"masterProductId\": 1, \"quantity\": 2, \"expirationDate\": \"mañana\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/inventory",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "inventory"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "13 - Error: usuario inexistente",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"userId\": 9999, \"masterProductId\": 1, \"quantity\": 2, \"expirationDate\": \"2026-11-10\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/inventory",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "inventory"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "14 - Error: producto de catálogo inexistente",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"userId\": 2, \"masterProductId\": 9999, \"quantity\": 2, \"expirationDate\": \"2026-11-10\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/inventory",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "inventory"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "15 - Error: listar sin userId",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/inventory",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "inventory"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "16 - Error: id con formato inválido",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/inventory/abc",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "inventory", "abc"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "17 - Error: ítem inexistente",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/inventory/9999\t",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "inventory", "9999\t"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "18 - Error: actualizar un campo no permitido",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"userId\": 1}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/inventory/1",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "inventory", "1"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "19 - Error: ítem ya eliminado",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/inventory/3",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "inventory", "3"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "1 - Crear ítem (Leche, vence pronto)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\": 2, \"masterProductId\": 1, \"quantity\": 2, \"expirationDate\": \"2026-11-10\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/inventory",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "inventory"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2 - Crear ítem (Huevos)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\": 2, \"masterProductId\": 2, \"quantity\": 12, \"expirationDate\": \"2026-11-10\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/inventory",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "inventory"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3 - Crear ítem (Arroz, vence lejos)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\": 2, \"masterProductId\": 6, \"quantity\": 3, \"expirationDate\": \"2026-12-15\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/inventory",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "inventory"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4 - Listar inventario de un usuario",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/inventory?userId=2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "inventory"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5 - Consultar ítem por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/inventory/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "inventory", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6 - Actualizar cantidad",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"quantity\": 1}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/inventory/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "inventory", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7 - Actualizar fecha de vencimiento",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"expirationDate\": \"2026-11-20\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/inventory/2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "inventory", "2"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8 - Eliminar ítem",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/inventory/3",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "inventory", "3"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
