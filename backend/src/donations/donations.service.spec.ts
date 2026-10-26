@@ -13,6 +13,7 @@ import { DonationOfferEntity } from '../entities/donation-offer.entity';
 import { DonationItemEntity } from '../entities/donation-item.entity';
 import { InventoryEntity } from '../entities/inventory.entity';
 import { UserEntity } from '../entities/user.entity';
+import { jest } from '@jest/globals';
 
 function repositoryMock() {
   return {
