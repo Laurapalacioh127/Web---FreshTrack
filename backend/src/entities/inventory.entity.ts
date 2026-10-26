@@ -6,9 +6,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import type { DonationItemEntity } from './donation-item.entity.ts';
-import type { MasterCatalogEntity } from './master-catalog.entity';
-import type { UserEntity } from './user.entity';
+import type { DonationItemEntity } from './donation-item.entity.js';
+import type { MasterCatalogEntity } from './master-catalog.entity.js';
+import type { UserEntity } from './user.entity.js';
 
 @Entity('inventory')
 export class InventoryEntity {

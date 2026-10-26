@@ -6,8 +6,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import type { RecipeIngredientEntity } from './recipe-ingredient.entity.ts';
-import type { UserEntity } from './user.entity';
+import type { RecipeIngredientEntity } from './recipe-ingredient.entity.js';
+import type { UserEntity } from './user.entity.js';
 
 @Entity('recipes')
 export class RecipeEntity {

@@ -7,8 +7,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import type { DonationItemEntity } from './donation-item.entity.ts';
-import type { UserEntity } from './user.entity';
+import type { DonationItemEntity } from './donation-item.entity.js';
+import type { UserEntity } from './user.entity.js';
 
 @Entity('donation_offers')
 export class DonationOfferEntity {

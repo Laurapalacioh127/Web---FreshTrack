@@ -19,7 +19,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\"userId\": 2, \"masterProductId\": 1, \"quantity\": 0, \"expirationDate\": \"2026-11-10\"}",
+                  "raw": "{\"masterProductId\": 1, \"quantity\": 0, \"expirationDate\": \"2026-11-10\"}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -29,9 +29,14 @@
                 "url": {
                   "raw": "http://localhost:3000/api/inventory",
                   "protocol": "http",
-                  "host": ["localhost"],
+                  "host": [
+                    "localhost"
+                  ],
                   "port": "3000",
-                  "path": ["api", "inventory"]
+                  "path": [
+                    "api",
+                    "inventory"
+                  ]
                 }
               },
               "response": []
@@ -43,7 +48,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\"userId\": 2, \"masterProductId\": 1, \"quantity\": \"2\", \"expirationDate\": \"2026-11-10\"}",
+                  "raw": "{\"masterProductId\": 1, \"quantity\": \"2\", \"expirationDate\": \"2026-11-10\"}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -53,9 +58,14 @@
                 "url": {
                   "raw": "http://localhost:3000/api/inventory",
                   "protocol": "http",
-                  "host": ["localhost"],
+                  "host": [
+                    "localhost"
+                  ],
                   "port": "3000",
-                  "path": ["api", "inventory"]
+                  "path": [
+                    "api",
+                    "inventory"
+                  ]
                 }
               },
               "response": []
@@ -67,7 +77,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\"userId\": 2, \"masterProductId\": 1, \"quantity\": 2, \"expirationDate\": \"2026-11-10\", \"status\": \"x\"}",
+                  "raw": "{\"masterProductId\": 1, \"quantity\": 2, \"expirationDate\": \"2026-11-10\", \"status\": \"x\"}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -77,21 +87,26 @@
                 "url": {
                   "raw": "http://localhost:3000/api/inventory",
                   "protocol": "http",
-                  "host": ["localhost"],
+                  "host": [
+                    "localhost"
+                  ],
                   "port": "3000",
-                  "path": ["api", "inventory"]
+                  "path": [
+                    "api",
+                    "inventory"
+                  ]
                 }
               },
               "response": []
             },
             {
-              "name": "12 - Error: fecha inválida",
+              "name": "12 - Error: fecha inv\u00e1lida",
               "request": {
                 "method": "POST",
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\"userId\": 2, \"masterProductId\": 1, \"quantity\": 2, \"expirationDate\": \"mañana\"}",
+                  "raw": "{\"masterProductId\": 1, \"quantity\": 2, \"expirationDate\": \"ma\u00f1ana\"}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -101,9 +116,14 @@
                 "url": {
                   "raw": "http://localhost:3000/api/inventory",
                   "protocol": "http",
-                  "host": ["localhost"],
+                  "host": [
+                    "localhost"
+                  ],
                   "port": "3000",
-                  "path": ["api", "inventory"]
+                  "path": [
+                    "api",
+                    "inventory"
+                  ]
                 }
               },
               "response": []
@@ -115,7 +135,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\"userId\": 9999, \"masterProductId\": 1, \"quantity\": 2, \"expirationDate\": \"2026-11-10\"}",
+                  "raw": "{\"masterProductId\": 1, \"quantity\": 2, \"expirationDate\": \"2026-11-10\"}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -125,21 +145,26 @@
                 "url": {
                   "raw": "http://localhost:3000/api/inventory",
                   "protocol": "http",
-                  "host": ["localhost"],
+                  "host": [
+                    "localhost"
+                  ],
                   "port": "3000",
-                  "path": ["api", "inventory"]
+                  "path": [
+                    "api",
+                    "inventory"
+                  ]
                 }
               },
               "response": []
             },
             {
-              "name": "14 - Error: producto de catálogo inexistente",
+              "name": "14 - Error: producto de cat\u00e1logo inexistente",
               "request": {
                 "method": "POST",
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\"userId\": 2, \"masterProductId\": 9999, \"quantity\": 2, \"expirationDate\": \"2026-11-10\"}",
+                  "raw": "{\"masterProductId\": 9999, \"quantity\": 2, \"expirationDate\": \"2026-11-10\"}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -149,9 +174,14 @@
                 "url": {
                   "raw": "http://localhost:3000/api/inventory",
                   "protocol": "http",
-                  "host": ["localhost"],
+                  "host": [
+                    "localhost"
+                  ],
                   "port": "3000",
-                  "path": ["api", "inventory"]
+                  "path": [
+                    "api",
+                    "inventory"
+                  ]
                 }
               },
               "response": []
@@ -164,39 +194,56 @@
                 "url": {
                   "raw": "http://localhost:3000/api/inventory",
                   "protocol": "http",
-                  "host": ["localhost"],
+                  "host": [
+                    "localhost"
+                  ],
                   "port": "3000",
-                  "path": ["api", "inventory"]
+                  "path": [
+                    "api",
+                    "inventory"
+                  ]
                 }
               },
               "response": []
             },
             {
-              "name": "16 - Error: id con formato inválido",
+              "name": "16 - Error: id con formato inv\u00e1lido",
               "request": {
                 "method": "GET",
                 "header": [],
                 "url": {
                   "raw": "http://localhost:3000/api/inventory/abc",
                   "protocol": "http",
-                  "host": ["localhost"],
+                  "host": [
+                    "localhost"
+                  ],
                   "port": "3000",
-                  "path": ["api", "inventory", "abc"]
+                  "path": [
+                    "api",
+                    "inventory",
+                    "abc"
+                  ]
                 }
               },
               "response": []
             },
             {
-              "name": "17 - Error: ítem inexistente",
+              "name": "17 - Error: \u00edtem inexistente",
               "request": {
                 "method": "GET",
                 "header": [],
                 "url": {
                   "raw": "http://localhost:3000/api/inventory/9999\t",
                   "protocol": "http",
-                  "host": ["localhost"],
+                  "host": [
+                    "localhost"
+                  ],
                   "port": "3000",
-                  "path": ["api", "inventory", "9999\t"]
+                  "path": [
+                    "api",
+                    "inventory",
+                    "9999\t"
+                  ]
                 }
               },
               "response": []
@@ -218,24 +265,36 @@
                 "url": {
                   "raw": "http://localhost:3000/api/inventory/1",
                   "protocol": "http",
-                  "host": ["localhost"],
+                  "host": [
+                    "localhost"
+                  ],
                   "port": "3000",
-                  "path": ["api", "inventory", "1"]
+                  "path": [
+                    "api",
+                    "inventory",
+                    "1"
+                  ]
                 }
               },
               "response": []
             },
             {
-              "name": "19 - Error: ítem ya eliminado",
+              "name": "19 - Error: \u00edtem ya eliminado",
               "request": {
                 "method": "GET",
                 "header": [],
                 "url": {
                   "raw": "http://localhost:3000/api/inventory/3",
                   "protocol": "http",
-                  "host": ["localhost"],
+                  "host": [
+                    "localhost"
+                  ],
                   "port": "3000",
-                  "path": ["api", "inventory", "3"]
+                  "path": [
+                    "api",
+                    "inventory",
+                    "3"
+                  ]
                 }
               },
               "response": []
@@ -243,13 +302,13 @@
           ]
         },
         {
-          "name": "1 - Crear ítem (Leche, vence pronto)",
+          "name": "1 - Crear \u00edtem (Leche, vence pronto)",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\"userId\": 2, \"masterProductId\": 1, \"quantity\": 2, \"expirationDate\": \"2026-11-10\"}",
+              "raw": "{\"masterProductId\": 1, \"quantity\": 2, \"expirationDate\": \"2026-11-10\"}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -259,21 +318,26 @@
             "url": {
               "raw": "http://localhost:3000/api/inventory",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "3000",
-              "path": ["api", "inventory"]
+              "path": [
+                "api",
+                "inventory"
+              ]
             }
           },
           "response": []
         },
         {
-          "name": "2 - Crear ítem (Huevos)",
+          "name": "2 - Crear \u00edtem (Huevos)",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\"userId\": 2, \"masterProductId\": 2, \"quantity\": 12, \"expirationDate\": \"2026-11-10\"}",
+              "raw": "{\"masterProductId\": 2, \"quantity\": 12, \"expirationDate\": \"2026-11-10\"}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -283,21 +347,26 @@
             "url": {
               "raw": "http://localhost:3000/api/inventory",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "3000",
-              "path": ["api", "inventory"]
+              "path": [
+                "api",
+                "inventory"
+              ]
             }
           },
           "response": []
         },
         {
-          "name": "3 - Crear ítem (Arroz, vence lejos)",
+          "name": "3 - Crear \u00edtem (Arroz, vence lejos)",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\"userId\": 2, \"masterProductId\": 6, \"quantity\": 3, \"expirationDate\": \"2026-12-15\"}",
+              "raw": "{\"masterProductId\": 6, \"quantity\": 3, \"expirationDate\": \"2026-12-15\"}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -307,9 +376,14 @@
             "url": {
               "raw": "http://localhost:3000/api/inventory",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "3000",
-              "path": ["api", "inventory"]
+              "path": [
+                "api",
+                "inventory"
+              ]
             }
           },
           "response": []
@@ -320,32 +394,38 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/inventory?userId=2",
+              "raw": "http://localhost:3000/api/inventory",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "3000",
-              "path": ["api", "inventory"],
-              "query": [
-                {
-                  "key": "userId",
-                  "value": "2"
-                }
-              ]
+              "path": [
+                "api",
+                "inventory"
+              ],
+              "query": []
             }
           },
           "response": []
         },
         {
-          "name": "5 - Consultar ítem por id",
+          "name": "5 - Consultar \u00edtem por id",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
               "raw": "http://localhost:3000/api/inventory/1",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "3000",
-              "path": ["api", "inventory", "1"]
+              "path": [
+                "api",
+                "inventory",
+                "1"
+              ]
             }
           },
           "response": []
@@ -367,9 +447,15 @@
             "url": {
               "raw": "http://localhost:3000/api/inventory/1",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "3000",
-              "path": ["api", "inventory", "1"]
+              "path": [
+                "api",
+                "inventory",
+                "1"
+              ]
             }
           },
           "response": []
@@ -391,29 +477,81 @@
             "url": {
               "raw": "http://localhost:3000/api/inventory/2",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "3000",
-              "path": ["api", "inventory", "2"]
+              "path": [
+                "api",
+                "inventory",
+                "2"
+              ]
             }
           },
           "response": []
         },
         {
-          "name": "8 - Eliminar ítem",
+          "name": "8 - Eliminar \u00edtem",
           "request": {
             "method": "DELETE",
             "header": [],
             "url": {
               "raw": "http://localhost:3000/api/inventory/3",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "3000",
-              "path": ["api", "inventory", "3"]
+              "path": [
+                "api",
+                "inventory",
+                "3"
+              ]
             }
           },
           "response": []
         }
       ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{userToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api"
+    },
+    {
+      "key": "userToken",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "userEmail",
+      "value": ""
+    },
+    {
+      "key": "userPassword",
+      "value": ""
+    },
+    {
+      "key": "adminEmail",
+      "value": "admin.auth@example.com"
+    },
+    {
+      "key": "adminPassword",
+      "value": ""
     }
   ]
 }

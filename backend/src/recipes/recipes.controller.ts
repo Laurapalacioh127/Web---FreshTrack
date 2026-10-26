@@ -1,3 +1,5 @@
+import { CurrentUser, Roles } from '../auth/auth.decorators';
+import type { UserEntity } from '../entities/user.entity';
 import {
   Body,
   Controller,
@@ -6,7 +8,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 
 import { requestValidationPipe } from '../common/request-validation.pipe';
@@ -26,17 +27,18 @@ export class RecipesController {
   @Post()
   create(
     @Body(requestValidationPipe) dto: CreateRecipeDto,
-    @Query('authorId', ParseIntPipe) authorId: number,
+    @CurrentUser() user: UserEntity,
   ) {
-    return this.recipesService.create(dto, authorId);
+    return this.recipesService.create(dto, user.id);
   }
 
+  @Roles('admin')
   @Patch(':id/moderation')
   moderate(
     @Param('id', ParseIntPipe) id: number,
     @Body(requestValidationPipe) dto: ModerateRecipeDto,
-    @Query('adminId', ParseIntPipe) adminId: number,
+    @CurrentUser() user: UserEntity,
   ) {
-    return this.recipesService.moderate(id, dto, adminId);
+    return this.recipesService.moderate(id, dto, user.id);
   }
 }

@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import type { InventoryEntity } from './inventory.entity.ts';
-import type { RecipeIngredientEntity } from './recipe-ingredient.entity.ts';
+import type { InventoryEntity } from './inventory.entity.js';
+import type { RecipeIngredientEntity } from './recipe-ingredient.entity.js';
 
 @Entity('master_catalog')
 export class MasterCatalogEntity {

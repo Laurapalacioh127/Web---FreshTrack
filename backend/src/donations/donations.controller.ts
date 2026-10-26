@@ -1,3 +1,6 @@
+import { CurrentUser, Roles } from '../auth/auth.decorators';
+import type { UserEntity } from '../entities/user.entity';
+import { ForbiddenException } from '@nestjs/common';
 import {
   Body,
   Controller,
@@ -19,25 +22,41 @@ export class DonationsController {
   constructor(private readonly donationsService: DonationsService) {}
 
   @Post()
-  create(@Body(requestValidationPipe) dto: CreateDonationDto) {
-    return this.donationsService.create(dto);
+  create(
+    @CurrentUser() user: UserEntity,
+    @Body(requestValidationPipe) dto: CreateDonationDto,
+  ) {
+    return this.donationsService.create({ ...dto, donorId: user.id });
   }
 
   @Get()
-  findAll(@Query(requestValidationPipe) query: FilterDonationsQueryDto) {
-    return this.donationsService.findAll(query);
+  findAll(
+    @CurrentUser() user: UserEntity,
+    @Query(requestValidationPipe) query: FilterDonationsQueryDto,
+  ) {
+    return this.donationsService.findAll(
+      user.role === 'admin' ? query : { ...query, donorId: user.id },
+    );
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.donationsService.findOne(id);
+  async findOne(
+    @CurrentUser() user: UserEntity,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    const donation = await this.donationsService.findOne(id);
+    if (user.role !== 'admin' && donation.donor.id !== user.id)
+      throw new ForbiddenException('Donation belongs to another user');
+    return donation;
   }
 
+  @Roles('admin')
   @Patch(':id/status')
   review(
+    @CurrentUser() user: UserEntity,
     @Param('id', ParseIntPipe) id: number,
     @Body(requestValidationPipe) dto: ReviewDonationDto,
   ) {
-    return this.donationsService.review(id, dto);
+    return this.donationsService.review(id, { ...dto, adminId: user.id });
   }
 }
