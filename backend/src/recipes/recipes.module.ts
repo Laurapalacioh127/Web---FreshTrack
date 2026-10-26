@@ -6,6 +6,7 @@ import { RecipeIngredientEntity } from '../entities/recipe-ingredient.entity';
 import { RecipeEntity } from '../entities/recipe.entity';
 import { UserEntity } from '../entities/user.entity';
 
+import { RecipesController } from './recipes.controller';
 import { RecipesService } from './recipes.service';
 import { RecipesRulesService } from './recipes-rules.service';
 
@@ -18,6 +19,7 @@ import { RecipesRulesService } from './recipes-rules.service';
       UserEntity,
     ]),
   ],
+  controllers: [RecipesController],
   providers: [RecipesService, RecipesRulesService],
 })
 export class RecipesModule {}
