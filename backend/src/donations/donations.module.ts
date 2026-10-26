@@ -5,6 +5,10 @@ import { DonationOfferEntity } from '../entities/donation-offer.entity';
 import { InventoryEntity } from '../entities/inventory.entity';
 import { UserEntity } from '../entities/user.entity';
 
+import { DonationsController } from './donations.controller';
+import { DonationsService } from './donations.service';
+import { DonationsRulesService } from './donations-rules.service';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -14,5 +18,7 @@ import { UserEntity } from '../entities/user.entity';
       UserEntity,
     ]),
   ],
+  controllers: [DonationsController],
+  providers: [DonationsService, DonationsRulesService],
 })
 export class DonationsModule {}
