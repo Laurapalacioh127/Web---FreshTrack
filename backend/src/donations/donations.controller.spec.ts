@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { DonationsController } from './donations.controller';
 import { DonationsService } from './donations.service';
+import { jest } from '@jest/globals';
 
 describe('DonationsController (HTTP con servicio mock)', () => {
   let app: INestApplication;

@@ -13,6 +13,7 @@ import { DonationsController } from '../donations/donations.controller';
 import { DonationsService } from '../donations/donations.service';
 import { InventoryController } from '../inventory/inventory.controller';
 import { InventoryService } from '../inventory/inventory.service';
+import { jest } from '@jest/globals';
 
 // HTTP real con guard y JWT reales; solo se simulan los repositorios y servicios de negocio.
 describe('Auth e integración con los módulos', () => {
