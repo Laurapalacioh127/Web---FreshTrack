@@ -5,7 +5,10 @@ export type ExpirationStatus = 'expired' | 'expiring_soon' | 'fresh';
 
 @Injectable()
 export class InventoryRulesService {
-  getDaysUntilExpiration(item: InventoryEntity, today: Date = new Date()): number {
+  getDaysUntilExpiration(
+    item: InventoryEntity,
+    today: Date = new Date(),
+  ): number {
     const msPerDay = 24 * 60 * 60 * 1000;
 
     // 'YYYY-MM-DD' → fecha local, para no desfasarnos por zona horaria
