@@ -25,6 +25,7 @@ import { DonationsModule } from './donations/donations.module';
         database: configService.get<string>('DB_DATABASE') ?? 'freshtrack',
         autoLoadEntities: true,
         synchronize: true,
+        ssl: configService.get<string>('NODE_ENV') === 'production',
       }),
     }),
     AuthModule,
