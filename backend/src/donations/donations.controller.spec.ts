@@ -19,13 +19,17 @@ describe('DonationsController (HTTP con servicio mock)', () => {
     }).compile();
     app = module.createNestApplication();
     app.setGlobalPrefix('api');
+    app.use((req: { user?: unknown }, _res: unknown, next: () => void) => {
+      req.user = { id: 2, role: 'user' };
+      next();
+    });
     await app.init();
   });
   beforeEach(() => {
     jest.clearAllMocks();
     service.create.mockResolvedValue({ id: 10, donationStatus: 'pending' });
     service.findAll.mockResolvedValue([]);
-    service.findOne.mockResolvedValue({ id: 10 });
+    service.findOne.mockResolvedValue({ id: 10, donor: { id: 2 } });
     service.review.mockResolvedValue({ id: 10, donationStatus: 'accepted' });
   });
   afterAll(async () => {
@@ -35,7 +39,7 @@ describe('DonationsController (HTTP con servicio mock)', () => {
   it('recibe una oferta válida', async () => {
     await request(app.getHttpServer())
       .post('/api/donations')
-      .send({ donorId: 2, items: [{ inventoryId: 3, quantity: 2 }] })
+      .send({ items: [{ inventoryId: 3, quantity: 2 }] })
       .expect(201);
     expect(service.create).toHaveBeenCalledWith(
       expect.objectContaining({ donorId: 2 }),
@@ -43,15 +47,14 @@ describe('DonationsController (HTTP con servicio mock)', () => {
   });
   it.each([
     {},
-    { donorId: 2, items: [] },
+    { items: [] },
     { donorId: '2', items: [{ inventoryId: 3, quantity: 2 }] },
-    { donorId: 2, items: [{ inventoryId: 3, quantity: 0 }] },
-    { donorId: 2, items: [{ inventoryId: 3, quantity: 1.5 }] },
-    { donorId: 2, items: [{ inventoryId: 3, quantity: 1001 }] },
-    { donorId: 2, items: [null] },
-    { donorId: 2, items: [{ inventoryId: 3, quantity: 1, extra: true }] },
+    { items: [{ inventoryId: 3, quantity: 0 }] },
+    { items: [{ inventoryId: 3, quantity: 1.5 }] },
+    { items: [{ inventoryId: 3, quantity: 1001 }] },
+    { items: [null] },
+    { items: [{ inventoryId: 3, quantity: 1, extra: true }] },
     {
-      donorId: 2,
       items: [{ inventoryId: 3, quantity: 1 }],
       donationStatus: 'accepted',
     },
@@ -88,16 +91,16 @@ describe('DonationsController (HTTP con servicio mock)', () => {
   it('envía la decisión al servicio', async () => {
     await request(app.getHttpServer())
       .patch('/api/donations/10/status')
-      .send({ adminId: 1, status: 'accepted' })
+      .send({ status: 'accepted' })
       .expect(200);
     expect(service.review).toHaveBeenCalledWith(
       10,
-      expect.objectContaining({ adminId: 1, status: 'accepted' }),
+      expect.objectContaining({ adminId: 2, status: 'accepted' }),
     );
   });
   it.each([
     { adminId: 1, status: 'pending' },
-    { status: 'accepted' },
+    { status: 'invalid' },
     { adminId: 0, status: 'rejected' },
   ])('rechaza una revisión inválida: %j', async (body) => {
     await request(app.getHttpServer())

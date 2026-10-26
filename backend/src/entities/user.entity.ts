@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import type { DonationOfferEntity } from './donation-offer.entity.ts';
-import type { InventoryEntity } from './inventory.entity.ts';
-import type { RecipeEntity } from './recipe.entity.ts';
+import type { DonationOfferEntity } from './donation-offer.entity.js';
+import type { InventoryEntity } from './inventory.entity.js';
+import type { RecipeEntity } from './recipe.entity.js';
 
 @Entity('users')
 export class UserEntity {
@@ -13,6 +13,15 @@ export class UserEntity {
 
   @Column({ unique: true, length: 150 })
   email!: string;
+
+  @Column({
+    name: 'password_hash',
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+    select: false,
+  })
+  passwordHash!: string | null;
 
   @Column({ type: 'varchar', length: 20, default: 'user' })
   role!: 'user' | 'admin';
@@ -26,6 +35,9 @@ export class UserEntity {
   @OneToMany('RecipeEntity', (recipe: RecipeEntity) => recipe.author)
   recipes!: RecipeEntity[];
 
-  @OneToMany('DonationOfferEntity', (donation: DonationOfferEntity) => donation.donor)
+  @OneToMany(
+    'DonationOfferEntity',
+    (donation: DonationOfferEntity) => donation.donor,
+  )
   donations!: DonationOfferEntity[];
 }

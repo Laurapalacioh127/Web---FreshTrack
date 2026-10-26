@@ -21,7 +21,9 @@ export class DonationsService {
     private readonly donationsRulesService: DonationsRulesService,
   ) {}
 
-  async create(dto: CreateDonationDto): Promise<DonationOfferEntity> {
+  async create(
+    dto: CreateDonationDto & { donorId: number },
+  ): Promise<DonationOfferEntity> {
     const donor = await this.usersRepository.findOneBy({ id: dto.donorId });
     if (!donor) {
       throw new NotFoundException(`User ${dto.donorId} not found`);
@@ -99,7 +101,7 @@ export class DonationsService {
 
   async review(
     id: number,
-    dto: ReviewDonationDto,
+    dto: ReviewDonationDto & { adminId: number },
   ): Promise<DonationOfferEntity> {
     const admin = await this.usersRepository.findOneBy({ id: dto.adminId });
     if (!admin) {

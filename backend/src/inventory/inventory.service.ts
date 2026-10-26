@@ -25,7 +25,9 @@ export class InventoryService {
     private readonly inventoryRulesService: InventoryRulesService,
   ) {}
 
-  async create(dto: CreateInventoryItemDto): Promise<InventoryEntity> {
+  async create(
+    dto: CreateInventoryItemDto & { userId: number },
+  ): Promise<InventoryEntity> {
     const user = await this.usersRepository.findOneBy({ id: dto.userId });
 
     if (!user) {
@@ -60,7 +62,7 @@ export class InventoryService {
     });
   }
 
-  async findExpiring(query: ExpiringInventoryQueryDto) {
+  async findExpiring(query: ExpiringInventoryQueryDto & { userId: number }) {
     const items = await this.findByUser({ userId: query.userId });
 
     return items
@@ -79,9 +81,9 @@ export class InventoryService {
       .filter((item) => item.status !== 'fresh');
   }
 
-  async findOne(id: number): Promise<InventoryEntity> {
+  async findOne(id: number, userId: number): Promise<InventoryEntity> {
     const item = await this.inventoryRepository.findOne({
-      where: { id },
+      where: { id, user: { id: userId } },
       relations: { masterProduct: true },
     });
 
@@ -95,16 +97,17 @@ export class InventoryService {
   async update(
     id: number,
     dto: UpdateInventoryItemDto,
+    userId: number,
   ): Promise<InventoryEntity> {
-    const item = await this.findOne(id);
+    const item = await this.findOne(id, userId);
 
     this.inventoryRepository.merge(item, dto);
 
     return this.inventoryRepository.save(item);
   }
 
-  async remove(id: number): Promise<InventoryEntity> {
-    const item = await this.findOne(id);
+  async remove(id: number, userId: number): Promise<InventoryEntity> {
+    const item = await this.findOne(id, userId);
 
     return this.inventoryRepository.remove(item);
   }

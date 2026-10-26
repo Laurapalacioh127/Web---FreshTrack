@@ -23,6 +23,19 @@ describe('RecipesController - HTTP', () => {
 
     app = module.createNestApplication();
     app.setGlobalPrefix('api');
+    app.use(
+      (
+        req: { user?: unknown; method: string },
+        _res: unknown,
+        next: () => void,
+      ) => {
+        req.user =
+          req.method === 'PATCH'
+            ? { id: 5, role: 'admin' }
+            : { id: 2, role: 'user' };
+        next();
+      },
+    );
     await app.init();
   });
 
@@ -52,7 +65,7 @@ describe('RecipesController - HTTP', () => {
 
   it('POST creates a valid recipe', async () => {
     await request(app.getHttpServer())
-      .post('/api/recipes?authorId=2')
+      .post('/api/recipes')
       .send({
         title: 'Arroz con verduras',
         prepTimeMins: 25,
@@ -70,7 +83,7 @@ describe('RecipesController - HTTP', () => {
 
   it('POST rejects missing ingredients', async () => {
     await request(app.getHttpServer())
-      .post('/api/recipes?authorId=2')
+      .post('/api/recipes')
       .send({
         title: 'Arroz',
         prepTimeMins: 20,
@@ -83,7 +96,7 @@ describe('RecipesController - HTTP', () => {
 
   it('PATCH approves a pending recipe', async () => {
     await request(app.getHttpServer())
-      .patch('/api/recipes/1/moderation?adminId=5')
+      .patch('/api/recipes/1/moderation')
       .send({ moderationStatus: 'approved' })
       .expect(200);
 
@@ -98,7 +111,7 @@ describe('RecipesController - HTTP', () => {
 
   it('PATCH rejects an invalid moderation status', async () => {
     await request(app.getHttpServer())
-      .patch('/api/recipes/1/moderation?adminId=5')
+      .patch('/api/recipes/1/moderation')
       .send({ moderationStatus: 'pending' })
       .expect(400);
 

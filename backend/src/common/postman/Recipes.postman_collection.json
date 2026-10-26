@@ -2,43 +2,163 @@
   "info": {
     "_postman_id": "bc3b3bfe-036b-4eaf-bb94-8edc95788113",
     "name": "FreshTrack D2 — Recetas (Nayo)",
-    "description": "Colección para probar los endpoints actuales de RecipesModule. Requiere backend NestJS conectado a PostgreSQL con usuarios y productos existentes. Los IDs se configuran en variables. ADVERTENCIA: authorId/adminId en query son provisionales y NO aportan autenticación ni autorización segura; sustituir por JWT/guards antes de exponer en producción.",
+    "description": "Recetas con JWT. Configurar adminEmail y adminPassword de la cuenta administradora creada según AUTH.md y masterProductId real. Ejecutar toda la colección en orden en una base de prueba.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
-      "key": "baseUrl",
-      "value": "http://localhost:3000"
-    },
-    {
-      "key": "authorId",
-      "value": "",
-      "description": "ID existente de un usuario en users"
-    },
-    {
-      "key": "adminId",
-      "value": "",
-      "description": "ID existente de un usuario con role=admin"
-    },
-    {
       "key": "masterProductId",
-      "value": "",
-      "description": "ID existente de master_catalog"
+      "value": "1"
+    },
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api"
+    },
+    {
+      "key": "userToken",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "userEmail",
+      "value": ""
+    },
+    {
+      "key": "userPassword",
+      "value": ""
+    },
+    {
+      "key": "adminEmail",
+      "value": "admin.auth@example.com"
+    },
+    {
+      "key": "adminPassword",
+      "value": ""
     },
     {
       "key": "recipeId",
-      "value": "",
-      "description": "Se actualiza automáticamente con POST crear receta"
+      "value": ""
     }
   ],
   "item": [
+    {
+      "name": "A - Registrar usuario de prueba",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/register",
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fullName\": \"Usuario Postman\",\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set(\"userEmail\", \"prueba-\" + pm.variables.replaceIn(\"{{$guid}}\") + \"@example.com\");",
+              "pm.collectionVariables.set(\"userPassword\", pm.variables.replaceIn(\"{{$guid}}\") + \"Aa1!\");"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+              "if (pm.response.code === 201) { pm.collectionVariables.set(\"userToken\", pm.response.json().accessToken); pm.collectionVariables.set(\"donorId\", pm.response.json().user.id); }",
+              "pm.test(\"Registro sin privilegios\", () => pm.expect(pm.response.json().user.role).to.eql(\"user\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "B - Login del usuario",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/login",
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) pm.collectionVariables.set(\"userToken\", pm.response.json().accessToken);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "C - Login administrador previamente configurado",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/login",
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) pm.collectionVariables.set(\"adminToken\", pm.response.json().accessToken);",
+              "pm.test(\"Cuenta administradora\", () => pm.expect(pm.response.json().user.role).to.eql(\"admin\"));"
+            ]
+          }
+        }
+      ]
+    },
     {
       "name": "01 — Consultar recetas aprobadas",
       "request": {
         "method": "GET",
         "header": [],
-        "url": "{{baseUrl}}/api/recipes",
-        "description": ""
+        "url": "{{baseUrl}}/recipes",
+        "description": "Usa el token del usuario."
       },
       "response": [],
       "event": [
@@ -65,8 +185,8 @@
             "value": "application/json"
           }
         ],
-        "url": "{{baseUrl}}/api/recipes?authorId={{authorId}}",
-        "description": "Antes de ejecutar, asignar authorId y masterProductId reales en las variables de la colección.",
+        "url": "{{baseUrl}}/recipes",
+        "description": "Usa el token del usuario.",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"title\": \"Arroz con vegetales\",\n  \"prepTimeMins\": 25,\n  \"masterProductIds\": [\n    {{masterProductId}}\n  ]\n}",
@@ -101,8 +221,8 @@
             "value": "application/json"
           }
         ],
-        "url": "{{baseUrl}}/api/recipes?authorId={{authorId}}",
-        "description": "",
+        "url": "{{baseUrl}}/recipes",
+        "description": "Usa el token del usuario.",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"title\": \"Receta sin ingredientes\",\n  \"prepTimeMins\": 10,\n  \"masterProductIds\": []\n}",
@@ -127,6 +247,51 @@
       ]
     },
     {
+      "name": "03b — Usuario no puede moderar (403)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/recipes/{{recipeId}}/moderation",
+        "description": "Un usuario normal recibe 403, aunque conozca el ID de la receta.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"moderationStatus\": \"approved\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{userToken}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 403\", () => pm.response.to.have.status(403));"
+            ]
+          }
+        }
+      ]
+    },
+    {
       "name": "04 — Aprobar receta pendiente (admin)",
       "request": {
         "method": "PATCH",
@@ -136,8 +301,8 @@
             "value": "application/json"
           }
         ],
-        "url": "{{baseUrl}}/api/recipes/{{recipeId}}/moderation?adminId={{adminId}}",
-        "description": "Requiere adminId real de un usuario role=admin, y recipeId creado en 02.",
+        "url": "{{baseUrl}}/recipes/{{recipeId}}/moderation",
+        "description": "Usa el token del administrador.",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"moderationStatus\": \"approved\"\n}",
@@ -146,6 +311,16 @@
               "language": "json"
             }
           }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
         }
       },
       "response": [],
@@ -172,8 +347,8 @@
             "value": "application/json"
           }
         ],
-        "url": "{{baseUrl}}/api/recipes/{{recipeId}}/moderation?adminId={{adminId}}",
-        "description": "Ejecutar DESPUÉS de 04, con la misma receta ya aprobada.",
+        "url": "{{baseUrl}}/recipes/{{recipeId}}/moderation",
+        "description": "Usa el token del administrador.",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"moderationStatus\": \"rejected\"\n}",
@@ -182,6 +357,16 @@
               "language": "json"
             }
           }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
         }
       },
       "response": [],
@@ -202,8 +387,8 @@
       "request": {
         "method": "GET",
         "header": [],
-        "url": "{{baseUrl}}/api/recipes",
-        "description": "Ejecutar después de 04."
+        "url": "{{baseUrl}}/recipes",
+        "description": "Usa el token del usuario."
       },
       "response": [],
       "event": [
@@ -219,5 +404,15 @@
         }
       ]
     }
-  ]
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{userToken}}",
+        "type": "string"
+      }
+    ]
+  }
 }
