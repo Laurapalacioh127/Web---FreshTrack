@@ -6,14 +6,17 @@ import { UserEntity } from '../entities/user.entity';
 import { MasterCatalogEntity } from '../entities/master-catalog.entity';
 import { InventoryService } from '../inventory/inventory.service';
 import { InventoryRulesService } from '../inventory/inventory-rules.service';
+import { jest } from '@jest/globals';
+
+const mockFn = () => jest.fn<(...args: any[]) => any>();
 
 describe('Propiedad del inventario', () => {
   let service: InventoryService;
   const repository = {
-    findOne: jest.fn(),
-    merge: jest.fn(),
-    save: jest.fn(),
-    remove: jest.fn(),
+    findOne: mockFn(),
+    merge: mockFn(),
+    save: mockFn(),
+    remove: mockFn(),
   };
   beforeEach(async () => {
     jest.clearAllMocks();

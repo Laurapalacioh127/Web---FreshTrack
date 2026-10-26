@@ -66,6 +66,7 @@ describe('InventoryService', () => {
   });
 
   describe('create', () => {
+    // El userId ahora sale del token; el controller se lo pasa al service
     const dto = {
       userId: 2,
       masterProductId: 1,
@@ -154,28 +155,28 @@ describe('InventoryService', () => {
   });
 
   describe('findOne', () => {
-    it('returns the item when the id exists', async () => {
+    it('returns the item when it belongs to the user', async () => {
       // Arrange
       const item = { id: 7, quantity: 2 } as InventoryEntity;
       inventoryRepositoryMock.findOne.mockResolvedValue(item);
 
       // Act
-      const result = await service.findOne(7);
+      const result = await service.findOne(7, 2);
 
       // Assert
       expect(result).toEqual(item);
       expect(inventoryRepositoryMock.findOne).toHaveBeenCalledWith({
-        where: { id: 7 },
+        where: { id: 7, user: { id: 2 } },
         relations: { masterProduct: true },
       });
     });
 
-    it('throws NotFoundException when the id does not exist', async () => {
+    it('throws NotFoundException when the item does not exist or belongs to another user', async () => {
       // Arrange
       inventoryRepositoryMock.findOne.mockResolvedValue(null);
 
       // Act and Assert
-      await expect(service.findOne(999)).rejects.toBeInstanceOf(
+      await expect(service.findOne(999, 2)).rejects.toBeInstanceOf(
         NotFoundException,
       );
     });
@@ -192,9 +193,13 @@ describe('InventoryService', () => {
       inventoryRepositoryMock.save.mockResolvedValue(updatedItem);
 
       // Act
-      const result = await service.update(3, dto);
+      const result = await service.update(3, dto, 2);
 
       // Assert
+      expect(inventoryRepositoryMock.findOne).toHaveBeenCalledWith({
+        where: { id: 3, user: { id: 2 } },
+        relations: { masterProduct: true },
+      });
       expect(inventoryRepositoryMock.merge).toHaveBeenCalledWith(item, dto);
       expect(inventoryRepositoryMock.save).toHaveBeenCalledWith(item);
       expect(result).toEqual(updatedItem);
@@ -206,7 +211,7 @@ describe('InventoryService', () => {
 
       // Act and Assert
       await expect(
-        service.update(999, { quantity: 1 }),
+        service.update(999, { quantity: 1 }, 2),
       ).rejects.toBeInstanceOf(NotFoundException);
       expect(inventoryRepositoryMock.merge).not.toHaveBeenCalled();
       expect(inventoryRepositoryMock.save).not.toHaveBeenCalled();
@@ -221,11 +226,26 @@ describe('InventoryService', () => {
       inventoryRepositoryMock.remove.mockResolvedValue(item);
 
       // Act
-      const result = await service.remove(4);
+      const result = await service.remove(4, 2);
 
       // Assert
       expect(inventoryRepositoryMock.remove).toHaveBeenCalledWith(item);
       expect(result).toEqual(item);
+    });
+
+    it('does not remove an item that belongs to another user', async () => {
+      // Arrange: la consulta filtra por dueño, así que otro usuario no lo encuentra
+      inventoryRepositoryMock.findOne.mockResolvedValue(null);
+
+      // Act and Assert
+      await expect(service.remove(4, 3)).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
+      expect(inventoryRepositoryMock.findOne).toHaveBeenCalledWith({
+        where: { id: 4, user: { id: 3 } },
+        relations: { masterProduct: true },
+      });
+      expect(inventoryRepositoryMock.remove).not.toHaveBeenCalled();
     });
   });
 
