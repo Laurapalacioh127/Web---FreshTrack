@@ -1,0 +1,223 @@
+{
+  "info": {
+    "_postman_id": "bc3b3bfe-036b-4eaf-bb94-8edc95788113",
+    "name": "FreshTrack D2 — Recetas (Nayo)",
+    "description": "Colección para probar los endpoints actuales de RecipesModule. Requiere backend NestJS conectado a PostgreSQL con usuarios y productos existentes. Los IDs se configuran en variables. ADVERTENCIA: authorId/adminId en query son provisionales y NO aportan autenticación ni autorización segura; sustituir por JWT/guards antes de exponer en producción.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "authorId",
+      "value": "",
+      "description": "ID existente de un usuario en users"
+    },
+    {
+      "key": "adminId",
+      "value": "",
+      "description": "ID existente de un usuario con role=admin"
+    },
+    {
+      "key": "masterProductId",
+      "value": "",
+      "description": "ID existente de master_catalog"
+    },
+    {
+      "key": "recipeId",
+      "value": "",
+      "description": "Se actualiza automáticamente con POST crear receta"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 — Consultar recetas aprobadas",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/recipes",
+        "description": ""
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Devuelve lista\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));",
+              "pm.test(\"Solo recetas aprobadas\", () => pm.response.json().forEach(r => pm.expect(r.moderationStatus).to.eql(\"approved\")));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 — Crear receta válida (pending)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/recipes?authorId={{authorId}}",
+        "description": "Antes de ejecutar, asignar authorId y masterProductId reales en las variables de la colección.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Arroz con vegetales\",\n  \"prepTimeMins\": 25,\n  \"masterProductIds\": [\n    {{masterProductId}}\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+              "if (pm.response.code === 201) { const data = pm.response.json(); pm.collectionVariables.set(\"recipeId\", String(data.id)); pm.test(\"Receta pendiente\", () => pm.expect(data.moderationStatus).to.eql(\"pending\")); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 — Rechazar DTO sin ingredientes (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/recipes?authorId={{authorId}}",
+        "description": "",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Receta sin ingredientes\",\n  \"prepTimeMins\": 10,\n  \"masterProductIds\": []\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400 por validación\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 — Aprobar receta pendiente (admin)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/recipes/{{recipeId}}/moderation?adminId={{adminId}}",
+        "description": "Requiere adminId real de un usuario role=admin, y recipeId creado en 02.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"moderationStatus\": \"approved\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) pm.test(\"Aprobada\", () => pm.expect(pm.response.json().moderationStatus).to.eql(\"approved\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 — Moderación duplicada rechazada (409)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/recipes/{{recipeId}}/moderation?adminId={{adminId}}",
+        "description": "Ejecutar DESPUÉS de 04, con la misma receta ya aprobada.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"moderationStatus\": \"rejected\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 409 por estado previo\", () => pm.response.to.have.status(409));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 — Consultar recetas aprobadas después de moderar",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/recipes",
+        "description": "Ejecutar después de 04."
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Receta aprobada visible\", () => { const data=pm.response.json(); const id=Number(pm.collectionVariables.get(\"recipeId\")); pm.expect(data.some(r => r.id===id && r.moderationStatus===\"approved\")).to.eql(true); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
