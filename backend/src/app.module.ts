@@ -1,3 +1,4 @@
+import { AuthModule } from './auth/auth.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -26,6 +27,7 @@ import { DonationsModule } from './donations/donations.module';
         synchronize: true,
       }),
     }),
+    AuthModule,
     InventoryModule,
     RecipesModule,
     DonationsModule,
