@@ -16,7 +16,7 @@ export const buildFeed = (donations: Donation[], recipes: Recipe[]): FeedEntry[]
     .map((donation) => ({
       id: `donation-${donation.id}`,
       title: 'Nueva oferta de donación',
-      detail: `${donation.items} · ${donation.zone}`,
+      detail: `${donation.items} · ${donation.donorEmail}`,
       tag: 'Urgencia alta',
       actionLabel: 'Revisar oferta',
       href: '/admin/donations',
@@ -34,11 +34,11 @@ export const buildFeed = (donations: Donation[], recipes: Recipe[]): FeedEntry[]
     }));
 
   const assignedDonations = donations
-    .filter((donation) => donation.status === 'approved')
+    .filter((donation) => donation.status === 'accepted')
     .map((donation) => ({
       id: `assigned-${donation.id}`,
       title: 'Donación asignada',
-      detail: `${donation.donorName} · ${donation.zone}`,
+      detail: `${donation.donorName} · ${donation.donorEmail}`,
       tag: 'Asignada',
       actionLabel: 'Ver seguimiento',
       href: '/admin/donations',

@@ -11,8 +11,8 @@ import { DonationCard } from '@/components/DonationCard/DonationCard';
 const filters: { name: string; status: DonationStatus | null }[] = [
   { name: 'Todas', status: null },
   { name: 'Pendientes', status: 'pending' },
-  { name: 'Aprobadas', status: 'approved' },
-  { name: 'Completadas', status: 'completed' },
+  { name: 'Aceptadas', status: 'accepted' },
+  { name: 'Rechazadas', status: 'rejected' },
 ];
 
 const AdminDonationsPage = () => {
@@ -34,7 +34,7 @@ const AdminDonationsPage = () => {
   const visible = donations.filter(
     (donation) =>
       (!activeStatus || donation.status === activeStatus) &&
-      `${donation.donorName} ${donation.zone}`.toLowerCase().includes(search.toLowerCase())
+      `${donation.donorName} ${donation.donorEmail}`.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -43,11 +43,7 @@ const AdminDonationsPage = () => {
         eyebrow="LOGÍSTICA SOLIDARIA"
         title="Panel de donaciones"
         subtitle="Coordina ofertas, rutas y entregas en tiempo real."
-        action={
-          <button type="button" className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-5 py-2.5 text-sm font-semibold text-white">
-            + Registrar donación
-          </button>
-        }
+      
       />
       <div className="flex flex-wrap items-center justify-between gap-4">
         <CategoryChips categories={chips} selected={filter} onSelect={setFilter} />

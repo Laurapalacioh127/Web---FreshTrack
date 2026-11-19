@@ -6,7 +6,6 @@ import { useRecipes } from '@/providers/RecipesProvider';
 import { useUsers } from '@/providers/UsersProvider';
 import { StatCard } from '@/components/StatCard/StatCard';
 import { FeedItem } from '@/components/FeedItem/FeedItem';
-import { ImpactSummary } from '@/components/ImpactSummary/ImpactSummary';
 import { buildFeed } from '@/utils/feed';
 
 const AdminHomePage = () => {
@@ -50,7 +49,6 @@ const AdminHomePage = () => {
             <FeedItem key={entry.id} entry={entry} highlight={index === 0} />
           ))}
         </section>
-        {summary && <ImpactSummary summary={summary} />}
       </div>
     </div>
   );

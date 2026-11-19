@@ -2,8 +2,8 @@ import type { DonationStatus } from '@/types';
 
 const styles: Record<DonationStatus, { label: string; className: string }> = {
   pending: { label: 'Pendiente', className: 'bg-sun' },
-  approved: { label: 'Aprobada', className: 'bg-ops-soft text-ops' },
-  completed: { label: 'Completada', className: 'bg-brand-soft text-brand-dark' },
+  accepted: { label: 'Aceptada', className: 'bg-brand-soft text-brand-dark' },
+  rejected: { label: 'Rechazada', className: 'bg-rose-soft text-rose-900' },
 };
 
 export const DonationStatusBadge = ({ status }: { status: DonationStatus }) => (
