@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { InventoryModule } from './inventory/inventory.module';
 import { RecipesModule } from './recipes/recipes.module';
 import { DonationsModule } from './donations/donations.module';
+import { CatalogModule } from './catalog/catalog.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { DonationsModule } from './donations/donations.module';
     InventoryModule,
     RecipesModule,
     DonationsModule,
+    CatalogModule,
   ],
   controllers: [AppController],
   providers: [AppService],
