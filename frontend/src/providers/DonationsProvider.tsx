@@ -1,7 +1,6 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { useAxios } from './AxiosProvider';
+import { createContext, ReactNode, useContext, useMemo } from 'react';
 import type { Donation, DonationSummary } from '@/types';
 
 interface DonationsContextType {
@@ -13,37 +12,30 @@ interface DonationsContextType {
 
 const DonationsContext = createContext<DonationsContextType | null>(null);
 
-export const DonationsProvider = ({ children }: { children: ReactNode }) => {
-  const axios = useAxios();
-  const [donations, setDonations] = useState<Donation[]>([]);
-  const [summary, setSummary] = useState<DonationSummary | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface DonationsProviderProps {
+  donations: Donation[];
+  error: string | null;
+  children: ReactNode;
+}
 
-  useEffect(() => {
-    const onInit = async () => {
-      try {
-        const [donationsRes, summaryRes] = await Promise.all([
-          axios.get<Donation[]>('/api/donations'),
-          axios.get<DonationSummary>('/api/donations/summary'),
-        ]);
-        setDonations(donationsRes.data);
-        setSummary(summaryRes.data);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    onInit();
-  }, [axios]);
-
-  return (
-    <DonationsContext.Provider value={{ donations, summary, loading, error }}>
-      {children}
-    </DonationsContext.Provider>
+export const DonationsProvider = ({ donations, error, children }: DonationsProviderProps) => {
+  const value = useMemo<DonationsContextType>(
+    () => ({
+      donations,
+      summary: {
+        kgRescued: 0,
+        dailyGoalPercent: 0,
+        families: 0,
+        deliveries: donations.filter((donation) => donation.status === 'accepted').length,
+        pendingDonations: donations.filter((donation) => donation.status === 'pending').length,
+      },
+      loading: false,
+      error,
+    }),
+    [donations, error]
   );
+
+  return <DonationsContext.Provider value={value}>{children}</DonationsContext.Provider>;
 };
 
 export const useDonations = () => {
