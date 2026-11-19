@@ -1,4 +1,6 @@
 import { Suspense } from 'react';
+import { requireRole } from '@/lib/api';
+import { toUser } from '@/lib/mappers';
 import { DonationsProvider } from '@/providers/DonationsProvider';
 import { ProductsProvider } from '@/providers/ProductsProvider';
 import { RecipesProvider } from '@/providers/RecipesProvider';
@@ -6,9 +8,11 @@ import { UsersProvider } from '@/providers/UsersProvider';
 import { AdminSidebar } from '@/components/AdminSidebar/AdminSidebar';
 import { AdminTopbar } from '@/components/AdminTopbar/AdminTopBar';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const session = await requireRole('admin');
+
   return (
-    <UsersProvider>
+    <UsersProvider user={toUser(session)}>
       <ProductsProvider>
         <DonationsProvider>
           <RecipesProvider>
