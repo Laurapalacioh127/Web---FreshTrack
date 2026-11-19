@@ -1,4 +1,4 @@
-import type { Donation, InventoryItem, User } from '@/types';
+import type { Donation, InventoryItem, Product, User } from '@/types';
 
 type InventoryApiItem = {
   id: number;
@@ -84,5 +84,22 @@ export function toUser(user: SessionApiUser): User {
     role: user.role === 'admin' ? 'admin' : 'household',
     points: 0,
     kgSaved: 0,
+  };
+}
+
+type CatalogApiItem = {
+  id: number;
+  productName: string;
+  category: string;
+  avgShelfLifeDays: number;
+};
+
+export function toProduct(product: CatalogApiItem): Product {
+  return {
+    id: String(product.id),
+    name: product.productName,
+    category: product.category,
+    shelfLifeDays: product.avgShelfLifeDays,
+    substitutes: [],
   };
 }
