@@ -6,12 +6,14 @@ interface AuthInputProps {
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
+  name?: string;
 }
 
-export const AuthInput = ({ label, type = 'text', placeholder, value, onChange }: AuthInputProps) => (
+export const AuthInput = ({ label, type = 'text', placeholder, value, onChange, name }: AuthInputProps) => (
   <label className="flex flex-col gap-1 text-xs font-semibold">
     {label}
     <input
+      name={name}
       type={type}
       placeholder={placeholder}
       value={value}
