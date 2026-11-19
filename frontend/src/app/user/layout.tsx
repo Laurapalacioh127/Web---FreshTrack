@@ -3,8 +3,9 @@ import { InventoryProvider } from '@/providers/InventoryProvider';
 import { RecipesProvider } from '@/providers/RecipesProvider';
 import { UsersProvider } from '@/providers/UsersProvider';
 import { UserSidebar } from '@/components/UserSidebar/UserSidebar';
+import { requireRole } from '@/lib/api';
 
-export default function UserLayout({ children }: { children: React.ReactNode }) {
+export default async function UserLayout({ children }: { children: React.ReactNode }) {
   return (
     <UsersProvider>
       <InventoryProvider>

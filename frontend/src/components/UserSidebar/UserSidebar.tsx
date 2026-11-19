@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { logout } from '@/lib/auth-actions';
 import { useUsers } from '@/providers/UsersProvider';
 import { formatKg } from '@/utils/format';
 import { Logo } from '@/components/logo/Logo';
@@ -26,9 +26,11 @@ export const UserSidebar = () => {
         ))}
       </nav>
       <div className="mt-auto flex flex-col gap-3">
-        <Link href="/" className="px-3 text-sm font-medium text-neutral-600">
-          Cerrar sesión
-        </Link>
+                <form action={logout}>
+          <button type="submit" className="px-3 text-sm font-medium text-neutral-600">
+            Cerrar sesión
+          </button>
+        </form>
         {household && (
           <div className="rounded-xl bg-ink p-3 text-white">
             <p className="text-sm font-semibold">{formatKg(household.kgSaved)} kg salvados</p>

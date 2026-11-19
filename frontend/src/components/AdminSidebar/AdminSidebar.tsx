@@ -1,7 +1,7 @@
 //el contador rosa sale de las recetas pendientes
 'use client';
 
-import Link from 'next/link';
+import { logout } from '@/lib/auth-actions';
 import { useRecipes } from '@/providers/RecipesProvider';
 import { Logo } from '@/components/logo/Logo';
 import { SidebarLink } from '@/components/SidebarLink/SidebarLink';
@@ -31,9 +31,11 @@ export const AdminSidebar = () => {
           <p className="text-sm font-semibold">Equipo FreshTrack</p>
           <p className="text-xs text-white/60">Operaciones · Cali</p>
         </div>
-        <Link href="/" className="px-3 text-sm font-medium text-white/70">
-          Cerrar sesión
-        </Link>
+                <form action={logout}>
+          <button type="submit" className="px-3 text-sm font-medium text-white/70">
+            Cerrar sesión
+          </button>
+        </form>
       </div>
     </aside>
   );
