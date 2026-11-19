@@ -1,58 +1,35 @@
-'use client';
-
 import Link from 'next/link';
-import { useState } from 'react';
+import { apiFetch } from '@/lib/api';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
-import { AuthInput } from '@/components/AuthInput/AuthInput';
+import { AddInventoryForm, type CatalogProduct } from '@/components/AddInventoryForm/AddInventoryForm';
 
-const ScanResultPage = () => {
-  const [name, setName] = useState('Tomates cherry');
-  const [quantity, setQuantity] = useState('350 g');
-  const [category, setCategory] = useState('Verduras');
-  const [expiry, setExpiry] = useState('En 3 días');
+const AddFoodPage = async () => {
+  const response = await apiFetch('/catalog');
+  const raw = response?.ok ? await response.json().catch(() => null) : null;
+  const products: CatalogProduct[] | null = Array.isArray(raw) ? raw : null;
 
   return (
     <div className="flex max-w-xl flex-col gap-6">
-      <Link href="/user/scan" className="text-sm font-semibold">
-        ← Volver al escáner
+      <Link href="/user/inventory" className="text-sm font-semibold">
+        ← Mi inventario
       </Link>
       <PageHeader
-        eyebrow="ANÁLISIS COMPLETADO"
-        title="¡Alimento detectado!"
-        subtitle="Revisa la información antes de guardarla."
+        eyebrow="NUEVO ALIMENTO"
+        title="Agregar alimento"
+        subtitle="Elige el producto del catálogo, la cantidad y cuándo vence."
       />
 
-      <div className="rounded-2xl bg-white p-5 shadow-sm">
-        <span className="rounded-full bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand-dark">
-          94% de confianza
-        </span>
-        <p className="mt-3 text-2xl font-light">{name}</p>
-        <p className="text-sm text-brand">Maduro, consumir en 3 días</p>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <AuthInput label="Nombre del producto" placeholder="Tomates cherry" value={name} onChange={setName} />
-        <AuthInput label="Cantidad" placeholder="350 g" value={quantity} onChange={setQuantity} />
-        <AuthInput label="Categoría" placeholder="Verduras" value={category} onChange={setCategory} />
-        <AuthInput label="Fecha de vencimiento sugerida" placeholder="En 3 días" value={expiry} onChange={setExpiry} />
-      </div>
-
-      <div className="flex gap-3">
-        <Link
-          href="/user/inventory"
-          className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-5 py-2.5 text-sm font-semibold text-white"
-        >
-          Guardar en inventario ✓
-        </Link>
-        <Link
-          href="/user/scan"
-          className="rounded-full border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold"
-        >
-          Volver a escanear
-        </Link>
-      </div>
+      {products === null && (
+        <p role="alert" className="text-sm text-red-600">
+          No se pudo cargar el catálogo. Intenta de nuevo en un momento.
+        </p>
+      )}
+      {products?.length === 0 && (
+        <p className="text-sm text-neutral-600">El catálogo está vacío todavía.</p>
+      )}
+      {products && products.length > 0 && <AddInventoryForm products={products} />}
     </div>
   );
 };
 
-export default ScanResultPage;
+export default AddFoodPage;

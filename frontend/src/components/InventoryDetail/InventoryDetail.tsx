@@ -8,6 +8,7 @@ import { useInventory } from '@/providers/InventoryProvider';
 import { StatusBadge } from '@/components/StatusBadge/StatusBadge';
 import { DetailField } from '@/components/DetailField/DetailField';
 import { formatExpiry } from '@/utils/format';
+import { deleteInventoryItem } from '@/lib/inventory-actions';
 
 const statusLabels: Record<InventoryStatus, string> = {
   ok: 'Fresco',
@@ -28,6 +29,7 @@ export const InventoryDetail = () => {
     return (
       <div className="flex flex-col gap-3">
         <p>No encontramos este alimento.</p>
+        
         <Link href="/user/inventory" className="text-sm font-semibold text-brand">
           ← Mi inventario
         </Link>
@@ -48,6 +50,15 @@ export const InventoryDetail = () => {
         <DetailField label="Vencimiento" value={formatExpiry(item.expiresInDays)} />
         <DetailField label="Estado" value={statusLabels[item.status]} />
       </div>
+            <form action={deleteInventoryItem}>
+        <input type="hidden" name="id" value={item.id} />
+        <button
+          type="submit"
+          className="w-full rounded-full border border-red-200 bg-white py-3 text-center text-sm font-semibold text-red-700"
+        >
+          Eliminar alimento
+        </button>
+      </form>
       <Link href="/user/recipes" className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 py-3 text-center text-sm font-semibold text-white">
         Buscar receta
       </Link>
