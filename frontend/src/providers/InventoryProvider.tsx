@@ -1,7 +1,6 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { useAxios } from './AxiosProvider';
+import { createContext, ReactNode, useContext, useMemo } from 'react';
 import type { InventoryItem, InventorySummary, ShoppingItem } from '@/types';
 
 interface InventoryContextType {
@@ -14,40 +13,29 @@ interface InventoryContextType {
 
 const InventoryContext = createContext<InventoryContextType | null>(null);
 
-export const InventoryProvider = ({ children }: { children: ReactNode }) => {
-  const axios = useAxios();
-  const [items, setItems] = useState<InventoryItem[]>([]);
-  const [summary, setSummary] = useState<InventorySummary | null>(null);
-  const [shoppingList, setShoppingList] = useState<ShoppingItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface InventoryProviderProps {
+  items: InventoryItem[];
+  error: string | null;
+  children: ReactNode;
+}
 
-  useEffect(() => {
-    const onInit = async () => {
-      try {
-        const [itemsRes, summaryRes, shoppingRes] = await Promise.all([
-          axios.get<InventoryItem[]>('/api/inventory'),
-          axios.get<InventorySummary>('/api/inventory/summary'),
-          axios.get<ShoppingItem[]>('/api/inventory/shopping-list'),
-        ]);
-        setItems(itemsRes.data);
-        setSummary(summaryRes.data);
-        setShoppingList(shoppingRes.data);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    onInit();
-  }, [axios]);
-
-  return (
-    <InventoryContext.Provider value={{ items, summary, shoppingList, loading, error }}>
-      {children}
-    </InventoryContext.Provider>
+export const InventoryProvider = ({ items, error, children }: InventoryProviderProps) => {
+  const value = useMemo<InventoryContextType>(
+    () => ({
+      items,
+      summary: {
+        registered: items.length,
+        expiringSoon: items.filter((item) => item.status === 'soon').length,
+        expired: items.filter((item) => item.status === 'expired').length,
+      },
+      shoppingList: [],
+      loading: false,
+      error,
+    }),
+    [items, error]
   );
+
+  return <InventoryContext.Provider value={value}>{children}</InventoryContext.Provider>;
 };
 
 export const useInventory = () => {

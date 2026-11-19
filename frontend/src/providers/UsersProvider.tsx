@@ -1,7 +1,6 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { useAxios } from './AxiosProvider';
+import { createContext, ReactNode, useContext } from 'react';
 import type { User } from '@/types';
 
 interface UsersContextType {
@@ -14,35 +13,16 @@ interface UsersContextType {
 
 const UsersContext = createContext<UsersContextType | null>(null);
 
-export const UsersProvider = ({ children }: { children: ReactNode }) => {
-  const axios = useAxios();
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export const UsersProvider = ({ user, children }: { user: User; children: ReactNode }) => {
+  const value: UsersContextType = {
+    users: [user],
+    household: user.role === 'household' ? user : null,
+    admin: user.role === 'admin' ? user : null,
+    loading: false,
+    error: null,
+  };
 
-  useEffect(() => {
-    const onInit = async () => {
-      try {
-        const res = await axios.get<User[]>('/api/users');
-        setUsers(res.data);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    onInit();
-  }, [axios]);
-
-  const household = users.find((user) => user.role === 'household') ?? null;
-  const admin = users.find((user) => user.role === 'admin') ?? null;
-
-  return (
-    <UsersContext.Provider value={{ users, household, admin, loading, error }}>
-      {children}
-    </UsersContext.Provider>
-  );
+  return <UsersContext.Provider value={value}>{children}</UsersContext.Provider>;
 };
 
 export const useUsers = () => {
