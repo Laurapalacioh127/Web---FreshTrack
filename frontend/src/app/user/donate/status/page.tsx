@@ -1,46 +1,69 @@
 import Link from 'next/link';
+import { apiFetch } from '@/lib/api';
+import { toDonation } from '@/lib/mappers';
+import { DonationStatusBadge } from '@/components/DonationStatusBadge/DonationStatusBadge';
 import { DonationTimeline } from '@/components/DonationTimeline/DonationTimeline';
+import type { Donation } from '@/types';
 
-const steps = [
-  { title: 'Pendiente', detail: 'Hoy, 10:24', done: true },
-  { title: 'Asignada', detail: 'Fundación Semillas', done: true },
-  { title: 'Completada', detail: 'Después de la entrega', done: false },
-];
+type DonationStatusPageProps = {
+  searchParams: Promise<{ created?: string }>;
+};
 
-const DonationStatusPage = () => (
-  <div className="flex max-w-xl flex-col gap-5">
-    <div className="rounded-2xl bg-ink p-4 text-white">
-      <p className="text-sm font-semibold">¡Donación asignada!</p>
-      <p className="text-xs text-white/70">Fundación Semillas recogerá tus productos mañana.</p>
+const reviewDetail = (status: Donation['status']) =>
+  status === 'pending' ? 'En espera' : status === 'accepted' ? 'Oferta aceptada' : 'Oferta rechazada';
+
+const DonationStatusPage = async ({ searchParams }: DonationStatusPageProps) => {
+  const { created } = await searchParams;
+
+  const response = await apiFetch('/donations');
+  const raw = response?.ok ? await response.json().catch(() => null) : null;
+  const donations: Donation[] | null = Array.isArray(raw) ? raw.map(toDonation) : null;
+
+  return (
+    <div className="flex max-w-xl flex-col gap-5">
+      {created === '1' && (
+        <div role="status" className="rounded-2xl bg-ink p-4 text-white">
+          <p className="text-sm font-semibold">¡Oferta enviada!</p>
+          <p className="text-xs text-white/70">Un administrador la revisará pronto.</p>
+        </div>
+      )}
+
+      <h1 className="text-4xl font-light">Mis donaciones</h1>
+
+      {donations === null && (
+        <p role="alert" className="text-sm text-red-600">
+          No se pudieron cargar tus donaciones. Intenta de nuevo.
+        </p>
+      )}
+      {donations?.length === 0 && (
+        <p className="text-sm text-neutral-600">Todavía no has hecho ninguna oferta de donación.</p>
+      )}
+      {donations?.map((donation) => (
+        <article key={donation.id} className="flex flex-col gap-4 rounded-2xl border border-black/5 bg-white p-5">
+          <div className="flex items-center justify-between gap-3">
+            <span className="rounded-full bg-ops-soft px-3 py-1 text-xs font-semibold text-ops">
+              Donación #{donation.id}
+            </span>
+            <DonationStatusBadge status={donation.status} />
+          </div>
+          <p className="font-semibold">{donation.items}</p>
+          <DonationTimeline
+            steps={[
+              { title: 'Oferta enviada', detail: donation.createdLabel, done: true },
+              { title: 'Revisión del administrador', detail: reviewDetail(donation.status), done: donation.status !== 'pending' },
+            ]}
+          />
+        </article>
+      ))}
+
+      <Link
+        href="/user/donate"
+        className="w-fit rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white shadow-glow-brand transition hover:-translate-y-0.5"
+      >
+        Donar más alimentos
+      </Link>
     </div>
-
-    <span className="w-fit rounded-full bg-ops-soft px-3 py-1 text-xs font-semibold text-ops">
-      Donación #FT-1084
-    </span>
-    <h1 className="text-4xl font-light">Tu donación está en camino</h1>
-    <p className="text-sm text-neutral-600">
-      Gracias por darle una segunda oportunidad a tus alimentos.
-    </p>
-
-    <div className="flex h-40 items-center justify-center rounded-3xl bg-brand">
-      <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold">Zero waste</span>
-    </div>
-
-    <DonationTimeline steps={steps} />
-
-    <div className="rounded-xl border border-black/5 bg-white p-4 text-sm">
-      <p className="text-xs text-neutral-500">Ventana de recogida</p>
-      <p className="font-semibold">Mañana, 9:00 - 11:00</p>
-    </div>
-    <div className="rounded-xl bg-sun p-4 text-sm">
-      <p className="font-semibold">+120 puntos ganados</p>
-      <p className="text-xs">Tu impacto sigue creciendo.</p>
-    </div>
-
-    <Link href="/user" className="w-fit rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-6 py-3 text-sm font-semibold text-white">
-      Volver al inicio
-    </Link>
-  </div>
-);
+  );
+};
 
 export default DonationStatusPage;

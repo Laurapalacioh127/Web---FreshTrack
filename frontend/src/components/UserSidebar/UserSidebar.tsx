@@ -12,6 +12,8 @@ const links = [
   { href: '/user/scan', label: 'Escanear' },
   { href: '/user/recipes', label: 'Recetas' },
   { href: '/user/profile', label: 'Perfil' },
+    { href: '/user/donate', label: 'Donar', exact: true },
+  { href: '/user/donate/status', label: 'Mis donaciones' },
 ];
 
 export const UserSidebar = () => {
