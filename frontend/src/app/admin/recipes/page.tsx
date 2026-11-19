@@ -5,6 +5,7 @@ import { useRecipes } from '@/providers/RecipesProvider';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { RecipeQueueItem } from '@/components/RecipeQueueItem/RecipeQueueItem';
 import { RecipeReviewPanel } from '@/components/RecipeReviewPanel/RecipeReviewPanel';
+import { PendingIntegrationNotice } from '@/components/PendingIntegrationNotice/PendingIntegrationNotice';
 
 type Decision = 'approved' | 'rejected';
 
@@ -29,6 +30,7 @@ const AdminRecipesPage = () => {
         title="Moderación de recetas"
         subtitle={`${queue.length} recetas esperan revisión nutricional y editorial.`}
       />
+            <PendingIntegrationNotice message="Datos de ejemplo. Falta un endpoint en el backend para listar las recetas pendientes (hoy GET /api/recipes solo devuelve las aprobadas). Las decisiones de esta pantalla no se guardan." />
       {!selected ? (
         <p className="rounded-2xl bg-brand-soft p-6 text-sm">
           No hay recetas pendientes de revisión. ¡Buen trabajo!

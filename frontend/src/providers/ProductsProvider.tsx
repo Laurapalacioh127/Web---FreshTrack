@@ -1,7 +1,6 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { useAxios } from './AxiosProvider';
+import { createContext, ReactNode, useContext } from 'react';
 import type { Product } from '@/types';
 
 interface ProductsContextType {
@@ -12,33 +11,17 @@ interface ProductsContextType {
 
 const ProductsContext = createContext<ProductsContextType | null>(null);
 
-export const ProductsProvider = ({ children }: { children: ReactNode }) => {
-  const axios = useAxios();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface ProductsProviderProps {
+  products: Product[];
+  error: string | null;
+  children: ReactNode;
+}
 
-  useEffect(() => {
-    const onInit = async () => {
-      try {
-        const res = await axios.get<Product[]>('/api/products');
-        setProducts(res.data);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    onInit();
-  }, [axios]);
-
-  return (
-    <ProductsContext.Provider value={{ products, loading, error }}>
-      {children}
-    </ProductsContext.Provider>
-  );
-};
+export const ProductsProvider = ({ products, error, children }: ProductsProviderProps) => (
+  <ProductsContext.Provider value={{ products, loading: false, error }}>
+    {children}
+  </ProductsContext.Provider>
+);
 
 export const useProducts = () => {
   const ctx = useContext(ProductsContext);

@@ -15,7 +15,9 @@ export const ProductRow = ({ product }: { product: Product }) => (
       </span>
     </td>
     <td>{product.shelfLifeDays} días</td>
-    <td className="text-neutral-600">{product.substitutes.join(', ')}</td>
+        <td className="text-neutral-600">
+      {product.substitutes.length > 0 ? product.substitutes.join(', ') : '—'}
+    </td>
     <td>
       <button type="button" className="rounded-md bg-ops-soft px-3 py-1 text-xs font-semibold text-ops">
         Editar
