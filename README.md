@@ -64,8 +64,8 @@ Instead of throwing food away, users can offer inventory items as a donation. An
 | Database | PostgreSQL + [TypeORM](https://typeorm.io/) |
 | Infrastructure | Docker and Docker Compose |
 | Testing | Jest (unit tests with mocks) and Postman |
-| Frontend *(planned)* | Next.js + React |
-| Authentication *(planned)* | JWT, Passport and role-based guards |
+| Frontend | Next.js + React |
+| Authentication | JWT, Passport and role-based guards |
 
 ## How it works
 
@@ -207,15 +207,15 @@ npm test                    # run unit tests
 ## Roadmap
 
 - [x] **D1:** problem definition, requirements, data model, prototype and planning
-- [ ] **D2:** functional backend
+- [x] **D2:** functional backend
   - [x] Project setup, Docker and database connection
   - [x] Entities and relations
-  - [ ] Inventory, Recipes and Donations modules
-  - [ ] Input validation with DTOs and pipes
-  - [ ] Unit tests and Postman collection
-  - [ ] Authentication and role-based authorization
-  - [ ] Deployment
-- [ ] **D3:** frontend connected to the backend
+  - [x] Inventory, Recipes and Donations modules
+  - [x] Input validation with DTOs and pipes
+  - [x] Unit tests and Postman collection
+  - [x] Authentication and role-based authorization
+  - [x] Deployment
+- [x] **D3:** frontend connected to the backend
 - [ ] **DF:** final delivery
 
 ---
