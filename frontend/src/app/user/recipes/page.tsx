@@ -5,6 +5,7 @@ import { useRecipes } from '@/providers/RecipesProvider';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { FeaturedRecipe } from '@/components/FeaturedRecipe/FeaturedRecipe';
 import { RecipeCard } from '@/components/RecipeCard/RecipeCard';
+import { PendingIntegrationNotice } from '@/components/PendingIntegrationNotice/PendingIntegrationNotice';
 
 const RecipesPage = () => {
   const { recipes, loading, error } = useRecipes();
@@ -26,6 +27,7 @@ const RecipesPage = () => {
             href="/user/recipes/new"
             className="rounded-full border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold"
           >
+                  <PendingIntegrationNotice message="Recetas de ejemplo. La integración con /api/recipes y la recomendación según tu inventario están en el plan para la entrega final." />
             + Crear mi receta
           </Link>
         }

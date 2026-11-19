@@ -1,37 +1,23 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
 import { useInventory } from '@/providers/InventoryProvider';
+import { useSearchFilter } from '@/hooks/useSearchFilter';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { SearchBox } from '@/components/SearchBox/SearchBox';
 import { CategoryChips } from '@/components/CategoryChips/CategoryChips';
 import { InventoryRow } from '@/components/InventoryRow/InventoryRow';
 
-const ALL = 'Todos';
-
 const InventoryPage = () => {
-  const { items, loading, error } = useInventory();
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState(ALL);
+  const { items, error } = useInventory();
+  const { search, setSearch, category, setCategory, chips, visible } = useSearchFilter(items, {
+    getText: (item) => item.name,
+    getCategory: (item) => item.category,
+    allLabel: 'Todos',
+  });
 
-  if (loading) return <p>Cargando inventario…</p>;
-  if (error) return <p className="text-red-600">{error}</p>;
+  if (error) return <p role="alert" className="text-red-600">{error}</p>;
 
-  const categoryNames = Array.from(new Set(items.map((item) => item.category)));
-  const chips = [
-    { name: ALL, count: items.length },
-    ...categoryNames.map((name) => ({
-      name,
-      count: items.filter((item) => item.category === name).length,
-    })),
-  ];
-
-  const visible = items.filter(
-    (item) =>
-      (category === ALL || item.category === category) &&
-      item.name.toLowerCase().includes(search.toLowerCase())
-  );
   const groups = Array.from(new Set(visible.map((item) => item.category)));
 
   return (
@@ -39,7 +25,7 @@ const InventoryPage = () => {
       <PageHeader
         eyebrow="TU COCINA, AL DÍA"
         title="Mi inventario"
-        subtitle={`${items.length} alimentos registrados · actualizado ahora`}
+        subtitle={`${items.length} alimentos registrados`}
         action={
           <Link
             href="/user/scan"
@@ -49,21 +35,29 @@ const InventoryPage = () => {
           </Link>
         }
       />
-      <SearchBox placeholder="Buscar en mi inventario" value={search} onChange={setSearch} />
-      <CategoryChips categories={chips} selected={category} onSelect={setCategory} />
-      {groups.length === 0 && (
-        <p className="text-sm text-neutral-600">No hay alimentos que coincidan con tu búsqueda.</p>
+      {items.length === 0 ? (
+        <p className="rounded-2xl bg-brand-soft p-6 text-sm">
+          Todavía no tienes alimentos registrados. Agrega el primero para empezar a cuidar tu inventario.
+        </p>
+      ) : (
+        <>
+          <SearchBox placeholder="Buscar en mi inventario" value={search} onChange={setSearch} />
+          <CategoryChips categories={chips} selected={category} onSelect={setCategory} />
+          {groups.length === 0 && (
+            <p className="text-sm text-neutral-600">No hay alimentos que coincidan con tu búsqueda.</p>
+          )}
+          {groups.map((group) => (
+            <section key={group} className="flex flex-col gap-3">
+              <h2 className="text-sm font-semibold">{group}</h2>
+              {visible
+                .filter((item) => item.category === group)
+                .map((item) => (
+                  <InventoryRow key={item.id} item={item} />
+                ))}
+            </section>
+          ))}
+        </>
       )}
-      {groups.map((group) => (
-        <section key={group} className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold">{group}</h2>
-          {visible
-            .filter((item) => item.category === group)
-            .map((item) => (
-              <InventoryRow key={item.id} item={item} />
-            ))}
-        </section>
-      ))}
     </div>
   );
 };
