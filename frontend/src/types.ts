@@ -15,6 +15,7 @@ export interface InventoryItem {
   name: string;
   category: string;
   quantity: string;
+  units: number;
   expiresInDays: number;
   status: InventoryStatus;
 }
@@ -49,14 +50,15 @@ export interface Recipe {
   steps: string[];
 }
 
-export type DonationStatus = 'pending' | 'approved' | 'completed';
+export type DonationStatus = 'pending' | 'accepted' | 'rejected';
 
 export interface Donation {
   id: string;
   donorName: string;
-  zone: string;
+  donorEmail: string;
   items: string;
   expiresLabel: string;
+  createdLabel: string;
   status: DonationStatus;
 }
 
