@@ -20,11 +20,11 @@ export default async function UserLayout({ children }: { children: React.ReactNo
     <UsersProvider user={toUser(session)}>
       <InventoryProvider items={items} error={error}>
         <RecipesProvider>
-          <div className="flex min-h-screen">
+          <div className="flex min-h-screen flex-col md:flex-row">
             <Suspense fallback={<aside className="m-4 w-56 shrink-0 rounded-[2rem] bg-white shadow-soft" />}>
               <UserSidebar />
             </Suspense>
-            <main className="flex-1 p-8">{children}</main>
+            <main className="flex-1 p-4 md:p-8">{children}</main>
           </div>
         </RecipesProvider>
       </InventoryProvider>
